@@ -117,10 +117,10 @@ class Client(object):
 
         """
         block = ''
-        line = self._readline()
+        line = self.readline()
         while line != '.':
             block += line
-            line = self._readline()
+            line = self.readline()
         return block
 
     def readxml(self):
@@ -130,7 +130,7 @@ class Client(object):
         :rtype: xml.etree.ElementTree
 
         """
-        block = re.sub(r'<(/?)s>', r'&lt;\1s&gt;', self._readblock())
+        block = re.sub(r'<(/?)s>', r'&lt;\1s&gt;', self.readblock())
         return XML(block)
 
     def empty(self):
@@ -151,9 +151,9 @@ class Client(object):
         :rtype: xml.etree.ElementTree
 
         """
-        xml = self._readxml()
+        xml = self.readxml()
         while xml.tag != tag:
-            xml = self._readxml()
+            xml = self.readxml()
         return xml
 
     def recognize(self):
