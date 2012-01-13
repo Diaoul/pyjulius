@@ -68,7 +68,7 @@ class Client(object):
         self.encoding = encoding
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.state = DISCONNECTED
-    
+
     def connect(self):
         """Connect to the server
 
