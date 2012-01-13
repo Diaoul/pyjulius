@@ -18,23 +18,28 @@ More details about the use of the module can be found here
 States
 ------
 
-.. autodata:: pyjulius.CONNECTED
-.. autodata:: pyjulius.DISCONNECTED
+.. autodata:: pyjulius.core.CONNECTED
+.. autodata:: pyjulius.core.DISCONNECTED
 
 Client
 ------
 
-.. autoclass:: pyjulius.Client
+.. autoclass:: pyjulius.core.Client
     :members:
 
 Sentence
 --------
 
-.. autoclass:: pyjulius.Sentence
+.. autoclass:: pyjulius.core.Sentence
     :members:
 
 Word
 ----
 
-.. autoclass:: pyjulius.Word
+.. autoclass:: pyjulius.core.Word
+    :members:
+
+Exceptions
+----------
+.. automodule:: pyjulius.exceptions
     :members:

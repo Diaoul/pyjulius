@@ -17,10 +17,11 @@
 # You should have received a copy of the Lesser GNU General Public License
 # along with pyjulius.  If not, see <http://www.gnu.org/licenses/>.
 from setuptools import setup
+execfile('pyjulius/infos.py')
 
 
 setup(name='pyjulius',
-    version='0.1',
+    version=__version__,
     license='LGPLv3',
     description='Simple interface to connect to a julius module server',
     long_description=open('README.rst').read() + '\n\n' +
@@ -36,4 +37,4 @@ setup(name='pyjulius',
     author='Antoine Bertin',
     author_email='diaoulael@gmail.com',
     url='https://github.com/Diaoul/pyjulius',
-    py_modules=['pyjulius'])
+    packages=['pyjulius'])

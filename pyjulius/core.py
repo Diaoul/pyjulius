@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2011 Antoine Bertin <diaoulael@gmail.com>
+# Copyright 2011-2012 Antoine Bertin <diaoulael@gmail.com>
 #
 # This file is part of pyjulius.
 #
@@ -15,9 +15,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with pyjulius.  If not, see <http://www.gnu.org/licenses/>.
+from exceptions import ConnectionError
 from xml.etree.ElementTree import XML
 import re
 import socket
+
+
+__all__ = ['Client', 'Word', 'Sentence']
+
 
 #: Connected client state
 CONNECTED = 1
@@ -51,10 +56,10 @@ class Client(object):
 
     .. attribute:: state
 
-        State can be one of:
+        Current state. State can be:
 
-        .. data:: pyjulius.CONNECTED
-        .. data:: pyjulius.DISCONNECTED
+        * :data:`~pyjulius.core.CONNECTED`
+        * :data:`~pyjulius.core.DISCONNECTED`
 
     """
     def __init__(self, host='localhost', port=10500, encoding='utf-8'):
@@ -65,13 +70,20 @@ class Client(object):
         self.state = DISCONNECTED
     
     def connect(self):
-        """Connect to the server"""
-        self.sock.connect((self.host, self.port))
+        """Connect to the server
+
+        :raise ConnectionError: If socket cannot establish a connection
+
+        """
+        try:
+            self.sock.connect((self.host, self.port))
+        except socket.error:
+            raise ConnectionError()
         self.state = CONNECTED
 
     def disconnect(self):
         """Disconnect from the server"""
-        self.sock.shutdown()
+        self.sock.shutdown(socket.SHUT_RDWR)
         self.sock.close()
         self.state = DISCONNECTED
 
@@ -83,11 +95,11 @@ class Client(object):
         """
         self.sock.send(command)
 
-    def _readline(self):
+    def readline(self):
         """Read a line from the server. Data is read from the socket until a character `\n` is found
 
-        :returns: the read line
-        :rtype: unicode
+        :return: the read line
+        :rtype: string
 
         """
         line = ''
@@ -97,11 +109,11 @@ class Client(object):
             data = self.sock.recv(1)
         return line
 
-    def _readblock(self):
+    def readblock(self):
         """Read a block from the server. Lines are read until a character `.` is found
 
-        :returns: the read block
-        :rtype: unicode
+        :return: the read block
+        :rtype: string
 
         """
         block = ''
@@ -111,10 +123,10 @@ class Client(object):
             line = self._readline()
         return block
 
-    def _readxml(self):
-        """Read a block and returns the result as XML
+    def readxml(self):
+        """Read a block and return the result as XML
 
-        :returns: block as xml
+        :return: block as xml
         :rtype: xml.etree.ElementTree
 
         """
@@ -135,7 +147,7 @@ class Client(object):
         """Read the socket until the xml tag is found
 
         :param string tag: xml tag to wait for
-        :returns: the xml element with matching tag
+        :return: the xml element with matching tag
         :rtype: xml.etree.ElementTree
 
         """
@@ -145,10 +157,10 @@ class Client(object):
         return xml
 
     def recognize(self):
-        """Extract the next recognized sentence from the server
+        """Catch the next recognized sentence
 
-        :returns: the recognized sentence
-        :rtype: :class:`Sentence`
+        :return: the recognized sentence
+        :rtype: :class:`~pyjulius.core.Sentence`
 
         """
         xml = self.etree('RECOGOUT')
@@ -157,10 +169,10 @@ class Client(object):
 
 
 class Sentence(object):
-    """Sentence object that represents a recognized sentence
+    """A recognized sentence
 
     :param words: words in the sentence
-    :type words: list of :class:`Word`
+    :type words: list of :class:`~pyjulius.core.Word`
     :param integer score: score of the sentence
 
     .. attribute:: words
@@ -196,7 +208,7 @@ class Sentence(object):
 
 
 class Word(object):
-    """Word object that represents a word within a sentence
+    """A word within a :class:`~pyjulius.core.Sentence`
 
     :param string word: the word
     :param float confidence: confidence of the recognized word
