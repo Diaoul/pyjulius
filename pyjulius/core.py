@@ -140,7 +140,6 @@ class Client(threading.Thread):
         self.sock.shutdown(socket.SHUT_RDWR)
         self.sock.close()
         self.state = DISCONNECTED
-           
 
     def send(self, command, timeout=5):
         """Send a command to the server
@@ -152,7 +151,7 @@ class Client(threading.Thread):
         _, writable, __ = select.select([], [self.sock], [], timeout)
         if not writable:
             raise SendTimeoutError()
-        writable[0].send(command) 
+        writable[0].send(command)
 
     def _readline(self):
         """Read a line from the server. Data is read from the socket until a character ``\n`` is found
