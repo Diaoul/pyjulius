@@ -17,6 +17,15 @@
 # along with pyjulius.  If not, see <http://www.gnu.org/licenses/>.
 from core import *
 from exceptions import *
+from models import *
+import logging
+try:
+    from logging import NullHandler
+except ImportError:
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
 
 
-__all__ = ['Client', 'Word', 'Sentence', 'Error', 'ConnectionError']
+__all__ = ['Client', 'Sentence', 'Word', 'Error', 'ConnectionError']
+logging.getLogger(__name__).addHandler(NullHandler())

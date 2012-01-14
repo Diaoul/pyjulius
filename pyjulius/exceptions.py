@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with pyjulius.  If not, see <http://www.gnu.org/licenses/>.
-__all__ = ['Error', 'ConnectionError']
+__all__ = ['Error', 'ConnectionError', 'SendTimeoutError']
 
 
 class Error(Exception):
@@ -24,3 +24,7 @@ class Error(Exception):
 
 class ConnectionError(Error):
     """Raised when the initial connection to the server could not be established"""
+
+
+class SendTimeoutError(Error):
+    """Raised when could not send the command (timeout)"""
