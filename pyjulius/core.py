@@ -161,8 +161,10 @@ class Client(threading.Thread):
 
         """
         line = ''
-        while not self._stop:
+        while 1:
             readable, _, __ = select.select([self.sock], [], [], 0.5)
+            if self._stop:
+                break
             if not readable:
                 continue
             data = readable[0].recv(1)
